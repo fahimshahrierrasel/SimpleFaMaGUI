@@ -1,16 +1,16 @@
 package service;
 
 import es.us.isa.FAMA.Reasoner.QuestionTrader;
+import es.us.isa.FAMA.Reasoner.questions.NumberOfProductsQuestion;
 import es.us.isa.FAMA.Reasoner.questions.ValidQuestion;
 import es.us.isa.FAMA.models.variabilityModel.VariabilityModel;
 
 public class FamaOperation {
     private QuestionTrader mQuestionTrader;
-    private VariabilityModel mVariabilityModel;
 
     public FamaOperation(String filePath) {
         mQuestionTrader = new QuestionTrader();
-        mVariabilityModel = mQuestionTrader.openFile(filePath);
+        VariabilityModel mVariabilityModel = mQuestionTrader.openFile(filePath);
         mQuestionTrader.setVariabilityModel(mVariabilityModel);
     }
 
@@ -18,6 +18,17 @@ public class FamaOperation {
         ValidQuestion validQuestion = (ValidQuestion) mQuestionTrader.createQuestion("Valid");
         mQuestionTrader.ask(validQuestion);
         return validQuestion.isValid();
+    }
+
+    private String numberOfProducts(){
+        if (isValid()) {
+            NumberOfProductsQuestion npq = (NumberOfProductsQuestion) mQuestionTrader
+                    .createQuestion("#Products");
+            mQuestionTrader.ask(npq);
+           return "The number of products is: " + npq.getNumberOfProducts();
+        } else {
+            return ("Your feature model is not valid");
+        }
     }
 
     public String getOperationOutput(String operationName)
@@ -28,10 +39,12 @@ public class FamaOperation {
         {
             case "Validation":
                 if (isValid())
-                    output.append("Model is Valid");
+                    output.append("Your feature model is valid");
                 else
-                    output.append("Model is not Valid");
-
+                    output.append("Your feature model is not valid");
+                break;
+            case "Number of Products":
+                output.append(numberOfProducts());
                 break;
             default:
                 output.append("Operation is not implemented yet");
