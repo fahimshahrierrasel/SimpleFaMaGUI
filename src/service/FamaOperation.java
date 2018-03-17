@@ -3,6 +3,7 @@ package service;
 import es.us.isa.FAMA.Reasoner.QuestionTrader;
 import es.us.isa.FAMA.Reasoner.questions.NumberOfProductsQuestion;
 import es.us.isa.FAMA.Reasoner.questions.ValidQuestion;
+import es.us.isa.FAMA.Reasoner.questions.VariabilityQuestion;
 import es.us.isa.FAMA.models.variabilityModel.VariabilityModel;
 
 public class FamaOperation {
@@ -31,6 +32,13 @@ public class FamaOperation {
         }
     }
 
+    private String getVariability()
+    {
+        VariabilityQuestion vq = (VariabilityQuestion) mQuestionTrader.createQuestion("Variability");
+        mQuestionTrader.ask(vq);
+        return String.valueOf(vq.getVariability());
+    }
+
     public String getOperationOutput(String operationName)
     {
         StringBuilder output = new StringBuilder();
@@ -45,6 +53,9 @@ public class FamaOperation {
                 break;
             case "Number of Products":
                 output.append(numberOfProducts());
+                break;
+            case "Variability":
+                output.append("Model variability: ").append(getVariability());
                 break;
             default:
                 output.append("Operation is not implemented yet");
