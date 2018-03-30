@@ -127,6 +127,8 @@ public class MainForm {
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 String filePath = jfc.getSelectedFile().getPath();
                 putRuleToTextPane(filePath);
+                writeRuleToDefaultFile();
+                initializeFama();
             }
         });
     }
@@ -173,6 +175,15 @@ public class MainForm {
         }
         catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void ifRuleAvaileable(){
+        if (txtPnRuleText.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "There is no rule available, please write or load one!");
+        } else {
+            writeRuleToDefaultFile();
+            initializeFama();
         }
     }
 }

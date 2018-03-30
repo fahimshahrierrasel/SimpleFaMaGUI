@@ -1,10 +1,14 @@
 package service;
 
+import es.us.isa.FAMA.Reasoner.Question;
 import es.us.isa.FAMA.Reasoner.QuestionTrader;
-import es.us.isa.FAMA.Reasoner.questions.NumberOfProductsQuestion;
-import es.us.isa.FAMA.Reasoner.questions.ValidQuestion;
-import es.us.isa.FAMA.Reasoner.questions.VariabilityQuestion;
+import es.us.isa.FAMA.Reasoner.questions.*;
+import es.us.isa.FAMA.models.featureModel.GenericFeature;
+import es.us.isa.FAMA.models.featureModel.Product;
+import es.us.isa.FAMA.models.variabilityModel.GenericProduct;
 import es.us.isa.FAMA.models.variabilityModel.VariabilityModel;
+
+import java.util.Iterator;
 
 public class FamaOperation {
     private QuestionTrader mQuestionTrader;
@@ -30,6 +34,30 @@ public class FamaOperation {
         } else {
             return ("Your feature model is not valid");
         }
+    }
+
+    private String GetProducts(){
+        StringBuilder sb = new StringBuilder();
+        Question q = mQuestionTrader.createQuestion("Products");
+        mQuestionTrader.ask(q);
+        ProductsQuestion pq = (ProductsQuestion) q;
+        long imax = pq.getNumberOfProducts();
+        Iterator<? extends GenericProduct> it = pq.getAllProducts().iterator();
+        int i = 0;
+        while (it.hasNext()){
+            i++;
+            Product p = (Product) it.next();
+            ValidProductQuestion vpq = (ValidProductQuestion) mQuestionTrader.createQuestion("ValidProduct");
+            vpq.setProduct(p);
+            mQuestionTrader.ask(vpq);
+            sb.append("RODUCT ").append(i).append(" of ").append(imax).append(".\nFeatures: ");
+            Iterator<GenericFeature> it2 = p.getFeatures().iterator();
+            while (it2.hasNext()){
+                sb.append(it2.next().getName() + ", ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 
     private String getVariability()
@@ -58,7 +86,7 @@ public class FamaOperation {
                 output.append("Model variability: ").append(getVariability());
                 break;
             default:
-                output.append("Operation is not implemented yet");
+                output.append(GetProducts());
                 break;
         }
 
