@@ -3,6 +3,7 @@ package service;
 import es.us.isa.FAMA.Reasoner.Question;
 import es.us.isa.FAMA.Reasoner.QuestionTrader;
 import es.us.isa.FAMA.Reasoner.questions.*;
+import es.us.isa.FAMA.errors.Error;
 import es.us.isa.FAMA.models.featureModel.GenericFeature;
 import es.us.isa.FAMA.models.featureModel.Product;
 import es.us.isa.FAMA.models.variabilityModel.GenericProduct;
@@ -12,10 +13,11 @@ import java.util.Iterator;
 
 public class FamaOperation {
     private QuestionTrader mQuestionTrader;
-
+    private VariabilityModel mVariabilityModel;
     public FamaOperation(String filePath) {
         mQuestionTrader = new QuestionTrader();
-        VariabilityModel mVariabilityModel = mQuestionTrader.openFile(filePath);
+
+        mVariabilityModel = mQuestionTrader.openFile(filePath);
         mQuestionTrader.setVariabilityModel(mVariabilityModel);
     }
 
@@ -50,10 +52,9 @@ public class FamaOperation {
             ValidProductQuestion vpq = (ValidProductQuestion) mQuestionTrader.createQuestion("ValidProduct");
             vpq.setProduct(p);
             mQuestionTrader.ask(vpq);
-            sb.append("RODUCT ").append(i).append(" of ").append(imax).append(".\nFeatures: ");
-            Iterator<GenericFeature> it2 = p.getFeatures().iterator();
-            while (it2.hasNext()){
-                sb.append(it2.next().getName() + ", ");
+            sb.append("PRODUCT ").append(i).append(" of ").append(imax).append(".\nFeatures: ");
+            for (GenericFeature genericFeature : p.getFeatures()) {
+                sb.append(genericFeature.getName()).append(", ");
             }
             sb.append("\n");
         }
@@ -65,6 +66,18 @@ public class FamaOperation {
         VariabilityQuestion vq = (VariabilityQuestion) mQuestionTrader.createQuestion("Variability");
         mQuestionTrader.ask(vq);
         return String.valueOf(vq.getVariability());
+    }
+
+    private String getErrorExplaination()
+    {
+        StringBuilder sb = new StringBuilder();
+        DetectErrorsQuestion vq = (DetectErrorsQuestion ) mQuestionTrader.createQuestion("DetectErrors");
+        vq.setObservations(mVariabilityModel.getObservations());
+        mQuestionTrader.ask(vq);
+        for (Error e : vq.getErrors()) {
+            sb.append(e).append("\n");
+        }
+        return sb.toString();
     }
 
     public String getOperationOutput(String operationName)
@@ -85,8 +98,13 @@ public class FamaOperation {
             case "Variability":
                 output.append("Model variability: ").append(getVariability());
                 break;
-            default:
+            case "Products":
                 output.append(GetProducts());
+                break;
+            case "Error Explanations":
+                output.append(getErrorExplaination());
+                break;
+            default:
                 break;
         }
 
