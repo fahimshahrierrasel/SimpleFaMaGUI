@@ -46,7 +46,7 @@ public class MainForm {
     private void initialize() {
         frame = new JFrame();
         frame.setBounds(100, 100, 800, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
         JPanel panelRuleEditor = new JPanel();
@@ -77,11 +77,16 @@ public class MainForm {
         panel.add(comboBoxOperation);
 
         JButton btnCheck = new JButton("Check");
-        btnCheck.setEnabled(false);
 
         btnCheck.addActionListener(e -> {
-            String selectedOperation = comboBoxOperation.getSelectedItem().toString();
-            dtrpnOutput.setText(famaOperation.getOperationOutput(selectedOperation));
+            if (txtPnRuleText.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "There is no rule available, please write or load one!");
+            } else {
+                writeRuleToDefaultFile();
+                initializeFama();
+                String selectedOperation = comboBoxOperation.getSelectedItem().toString();
+                dtrpnOutput.setText(famaOperation.getOperationOutput(selectedOperation));
+            }
         });
 
         btnCheck.setBounds(168, 82, 117, 29);
@@ -90,19 +95,6 @@ public class MainForm {
         JButton btnSelectFile = new JButton("Load File");
         btnSelectFile.setBounds(6, 297, 127, 29);
         frame.getContentPane().add(btnSelectFile);
-
-        JButton btnLoadRule = new JButton("Load Rule");
-        btnLoadRule.addActionListener(e -> {
-            if (txtPnRuleText.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "There is no rule available, please write or load one!");
-            } else {
-                writeRuleToDefaultFile();
-                initializeFama();
-                btnCheck.setEnabled(true);
-            }
-        });
-        btnLoadRule.setBounds(132, 297, 117, 29);
-        frame.getContentPane().add(btnLoadRule);
 
         JPanel panelOutput = new JPanel();
         panelOutput.setBorder(new TitledBorder(null, "Output", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -175,15 +167,6 @@ public class MainForm {
         }
         catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    private void ifRuleAvaileable(){
-        if (txtPnRuleText.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "There is no rule available, please write or load one!");
-        } else {
-            writeRuleToDefaultFile();
-            initializeFama();
         }
     }
 }
