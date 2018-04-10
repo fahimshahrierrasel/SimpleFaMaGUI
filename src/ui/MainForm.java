@@ -10,7 +10,7 @@ import java.io.*;
 
 public class MainForm {
 
-    private JFrame frame;
+    private JFrame frmSimpleFamaGui;
     private JTextPane txtPnRuleText;
     private JComboBox comboBoxOperation;
 
@@ -20,15 +20,9 @@ public class MainForm {
             "Validation",
             "Products",
             "Number of Products",
-            "Commonality",
             "Variability",
-            "Valid Product",
-            "Valid Configuration",
             "Error Detection",
-            "Error Explanations",
-            "Invalid Product Explanation",
-            "Core Features",
-            "Variant Features"
+            "Error Explanations"
     };
     private JEditorPane dtrpnOutput;
 
@@ -37,22 +31,23 @@ public class MainForm {
      */
     public MainForm() {
         initialize();
-        frame.setVisible(true);
+        frmSimpleFamaGui.setVisible(true);
     }
 
     /**
      * Initialize the contents of the frame.
      */
     private void initialize() {
-        frame = new JFrame();
-        frame.setBounds(100, 100, 800, 600);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(null);
+        frmSimpleFamaGui = new JFrame();
+        frmSimpleFamaGui.setTitle("Simple Fama GUI");
+        frmSimpleFamaGui.setBounds(100, 100, 800, 600);
+        frmSimpleFamaGui.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frmSimpleFamaGui.getContentPane().setLayout(null);
 
         JPanel panelRuleEditor = new JPanel();
         panelRuleEditor.setBorder(new TitledBorder(null, "Rule Editor", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panelRuleEditor.setBounds(6, 11, 480, 285);
-        frame.getContentPane().add(panelRuleEditor);
+        frmSimpleFamaGui.getContentPane().add(panelRuleEditor);
         panelRuleEditor.setLayout(new BorderLayout(0, 0));
 
         JScrollPane scrollPaneRuleEditor = new JScrollPane();
@@ -65,7 +60,7 @@ public class MainForm {
         JPanel panel = new JPanel();
         panel.setBorder(new TitledBorder(null, "Options", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panel.setBounds(486, 11, 308, 285);
-        frame.getContentPane().add(panel);
+        frmSimpleFamaGui.getContentPane().add(panel);
         panel.setLayout(null);
 
         JLabel lblOperations = new JLabel("Operations");
@@ -94,12 +89,12 @@ public class MainForm {
 
         JButton btnSelectFile = new JButton("Load File");
         btnSelectFile.setBounds(6, 297, 127, 29);
-        frame.getContentPane().add(btnSelectFile);
+        frmSimpleFamaGui.getContentPane().add(btnSelectFile);
 
         JPanel panelOutput = new JPanel();
         panelOutput.setBorder(new TitledBorder(null, "Output", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panelOutput.setBounds(6, 327, 788, 245);
-        frame.getContentPane().add(panelOutput);
+        frmSimpleFamaGui.getContentPane().add(panelOutput);
         panelOutput.setLayout(new BorderLayout(0, 0));
 
         JScrollPane scrollPaneOutput = new JScrollPane();
@@ -108,6 +103,10 @@ public class MainForm {
         dtrpnOutput = new JEditorPane();
         dtrpnOutput.setEditable(false);
         scrollPaneOutput.setViewportView(dtrpnOutput);
+        
+        JButton btnExportModel = new JButton("Export Model");
+        btnExportModel.setBounds(133, 297, 142, 29);
+        frmSimpleFamaGui.getContentPane().add(btnExportModel);
         btnSelectFile.addActionListener(e -> {
             JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
             jfc.setDialogTitle("Select FaMa File");
