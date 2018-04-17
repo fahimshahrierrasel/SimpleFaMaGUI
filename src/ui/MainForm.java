@@ -8,6 +8,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.BorderLayout;
 import java.io.*;
+import java.awt.Font;
 
 public class MainForm {
 
@@ -55,12 +56,13 @@ public class MainForm {
         panelRuleEditor.add(scrollPaneRuleEditor, BorderLayout.CENTER);
 
         txtPnRuleText = new JTextPane();
-        txtPnRuleText.setToolTipText("Enter FaMa Rules");
+        txtPnRuleText.setFont(new Font("Courier New", Font.PLAIN, 16));
+        txtPnRuleText.setToolTipText("");
         scrollPaneRuleEditor.setViewportView(txtPnRuleText);
 
         JPanel panel = new JPanel();
         panel.setBorder(new TitledBorder(null, "Options", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        panel.setBounds(486, 11, 308, 285);
+        panel.setBounds(486, 11, 293, 285);
         frmSimpleFamaGui.getContentPane().add(panel);
         panel.setLayout(null);
 
@@ -69,7 +71,7 @@ public class MainForm {
         panel.add(lblOperations);
 
         comboBoxOperation = new JComboBox(options);
-        comboBoxOperation.setBounds(20, 40, 265, 30);
+        comboBoxOperation.setBounds(20, 40, 258, 30);
         panel.add(comboBoxOperation);
 
         JButton btnCheck = new JButton("Check");
@@ -85,16 +87,16 @@ public class MainForm {
             }
         });
 
-        btnCheck.setBounds(168, 82, 117, 29);
+        btnCheck.setBounds(168, 82, 110, 29);
         panel.add(btnCheck);
 
         JButton btnSelectFile = new JButton("Load File");
-        btnSelectFile.setBounds(6, 297, 127, 29);
+        btnSelectFile.setBounds(16, 297, 127, 29);
         frmSimpleFamaGui.getContentPane().add(btnSelectFile);
 
         JPanel panelOutput = new JPanel();
         panelOutput.setBorder(new TitledBorder(null, "Output", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        panelOutput.setBounds(6, 327, 788, 245);
+        panelOutput.setBounds(6, 327, 773, 230);
         frmSimpleFamaGui.getContentPane().add(panelOutput);
         panelOutput.setLayout(new BorderLayout(0, 0));
 
@@ -102,14 +104,13 @@ public class MainForm {
         panelOutput.add(scrollPaneOutput, BorderLayout.CENTER);
         
         dtrpnOutput = new JEditorPane();
+        dtrpnOutput.setFont(new Font("Consolas", Font.PLAIN, 18));
         dtrpnOutput.setEditable(false);
         scrollPaneOutput.setViewportView(dtrpnOutput);
         
         JButton btnExportModel = new JButton("Export Model");
-        btnExportModel.setBounds(133, 297, 142, 29);
-        frmSimpleFamaGui.getContentPane().add(btnExportModel);
-        btnExportModel.addActionListener(e -> {
-        	writeRuleToDefaultFile();
+        btnExportModel.addActionListener( e -> {
+    		writeRuleToDefaultFile();
             String result = ExportModel.ExportFaMaModel();
             if(result.equals("File Saved!"))
             {
@@ -119,6 +120,8 @@ public class MainForm {
                 JOptionPane.showMessageDialog(null, result);
             }
         });
+        btnExportModel.setBounds(153, 297, 142, 29);
+        frmSimpleFamaGui.getContentPane().add(btnExportModel);
 
         btnSelectFile.addActionListener(e -> {
             JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
