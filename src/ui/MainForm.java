@@ -1,5 +1,6 @@
 package ui;
 
+import service.ExportModel;
 import service.FamaOperation;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -107,6 +108,18 @@ public class MainForm {
         JButton btnExportModel = new JButton("Export Model");
         btnExportModel.setBounds(133, 297, 142, 29);
         frmSimpleFamaGui.getContentPane().add(btnExportModel);
+        btnExportModel.addActionListener(e -> {
+        	writeRuleToDefaultFile();
+            String result = ExportModel.ExportFaMaModel();
+            if(result.equals("File Saved!"))
+            {
+                JOptionPane.showMessageDialog(null, "Model File Exported!!");
+            }
+            else{
+                JOptionPane.showMessageDialog(null, result);
+            }
+        });
+
         btnSelectFile.addActionListener(e -> {
             JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
             jfc.setDialogTitle("Select FaMa File");
