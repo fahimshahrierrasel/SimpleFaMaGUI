@@ -84,7 +84,8 @@ public class FamaOperation {
         for (Error e : vq.getErrors()) {
             sb.append(e).append("\n");
         }
-        return sb.toString();
+        String filteredString = sb.toString().replace("False-mandatory", "False Optional");
+        return filteredString;
     }
 
     private String getErrorExplanations() {
@@ -103,7 +104,8 @@ public class FamaOperation {
         for (Error e : errors) {
             Collection<Explanation> explanations = e.getExplanations();
             Iterator<Explanation> itExp = explanations.iterator();
-            sb.append("Explanations for error ").append(e).append("\n");
+            String filteredString = e.toString().replace("False-mandatory", "False Optional");
+            sb.append("Explanations for error ").append(filteredString).append("\n");
             sb.append(explanations.size()).append(" Explanations").append("\n");
             sb.append("------------------------").append("\n");
             while (itExp.hasNext()) {
